@@ -19,7 +19,8 @@ Welcome! In this workshop, you will build your own platformer game step by step 
 
 1. Clone or fork this repo
 2. Open the folder
-3. Open `index.html` in your browser
+3. Create an `index.html` file
+4. Open `index.html` in your browser using the go live button in your bottomr right corner of VS code
 
 ---
 
