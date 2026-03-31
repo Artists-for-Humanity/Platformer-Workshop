@@ -14,11 +14,12 @@ const player = {
   velocityX: 0,
 };
 
-const ground = {
-  y: 450,
-  height: 50,
-};
-
+const platforms = [
+  { x: 0, y: 450, width: 800, height: 50 },
+  { x: 100, y: 250, width: 250, height: 20 },
+  { x: 400, y: 350, width: 150, height: 20 },
+  { x: 500, y: 150, width: 150, height: 20 },
+];
 const gravity = 0.5;
 
 const key = {
@@ -43,33 +44,45 @@ document.addEventListener("keyup", (e) => {
 });
 
 function drawGround() {
-  ctx.fillStyle = "green";
-  ctx.fillRect(0, ground.y, canvas.width, ground.height);
+  for (let platform of platforms) {
+    ctx.fillStyle = "#540808";
+    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+  }
 }
 
 function drawPlayer() {
-  ctx.fillStyle = "blue";
+  ctx.fillStyle = "green";
   ctx.fillRect(player.x, player.y, player.width, player.height);
 }
 
 function updatePlayer() {
   // Movement
-  if (key.left) player.velocityX = -5;
-  else if (key.right) player.velocityX = 5;
-  else player.velocityX = 0;
+  if (key.left) player.velocityX -= 0.5;
+  else if (key.right) player.velocityX += 0.5;
+
+  player.velocityX *= 0.9;
 
   player.x += player.velocityX;
 
   // Gravity
   player.velocityY += gravity;
   player.y += player.velocityY;
-  // coillision
-  if (player.y + player.height >= ground.y) {
-    player.y = ground.y - player.height;
-    player.velocityY = 0;
-    onGround = true;
-  } else {
-    onGround = false;
+  // collision
+  onGround = false;
+
+  for (let platform of platforms) {
+    const isLanding =
+      player.y + player.height >= platform.y &&
+      player.y + player.height <= platform.y + platform.height &&
+      player.x + player.width > platform.x &&
+      player.x < platform.x + platform.width &&
+      player.velocityY >= 0;
+
+    if (isLanding) {
+      player.y = platform.y - player.height;
+      player.velocityY = 0;
+      onGround = true;
+    }
   }
 }
 
