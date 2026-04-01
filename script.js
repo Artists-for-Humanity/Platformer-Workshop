@@ -32,18 +32,20 @@ const platforms = [
   { x: 200, y: 350, width: 150, height: 20 },
   { x: 400, y: 300, width: 150, height: 20 },
   { x: 600, y: 250, width: 150, height: 20 },
-  { x: 1000, y: 450, width: 300, height: 20}
+  { x: 800, y: 300, width: 150, height: 20},
+  { x: 980, y: 370, width: 150, height: 20},
+  { x: 1100, y: 450, width: 300, height: 20}
 ];
 
 
 const coins = [
-    { x: 250, y: 300, size: 20, collected: false },
-    { x: 450, y: 250, size: 20, collected: false },
-    { x: 650, y: 200, size: 20, collected: false}
+    { x: 250, y: 310, size: 20, collected: false },
+    { x: 450, y: 260, size: 20, collected: false },
+    { x: 650, y: 210, size: 20, collected: false}
 ];
 
 const goal = {
-    x: 1200,
+    x: 1350,
     y: 380,
     width: 40,
     height: 70
@@ -148,11 +150,11 @@ function updatePlayer() {
 
 for (let platform of platforms) {
   const isLanding =
-    player.y + player.height >= platform.y &&
-    player.y + player.height <= platform.y + platform.height &&
-    player.x + player.width > platform.x &&
-    player.x < platform.x + platform.width &&
-    player.velocityY >= 0;
+        player.y + player.height >= platform.y &&
+        player.y + player.height <= platform.y + platform.height &&
+        player.x + player.width > platform.x &&
+        player.x < platform.x + platform.width &&
+        player.velocityY >= 0;
     console.log(isLanding);
   if (isLanding) {
     player.y = platform.y - player.height;
