@@ -1,6 +1,20 @@
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+const playerSprite = new Image();
+playerSprite.src = "../assets/player.png";
+const groundSprite = new Image();
+groundSprite.src = "../assets/ground.png";
+
+const coinSprite = new Image();
+coinSprite.src = "../assets/coin.png";
+
+const background = new Image();
+background.src = "../assets/background.png";
+
+const goalSprite = new Image();
+goalSprite.src = "../assets/flag.png";
+
 canvas.width = 800;
 canvas.height = 500;
 
@@ -13,20 +27,20 @@ const camera = {
 const goal = {
   x: 1200,
   y: 380,
-  with: 40,
+  with: 50,
   height: 70,
 };
 
 const coins = [
-  { x: 200, y: 225, size: 40, collected: false },
-  { x: 475, y: 325, size: 40, collected: false },
-  { x: 575, y: 125, size: 40, collected: false },
+  { x: 200, y: 225, size: 60, collected: false },
+  { x: 475, y: 325, size: 60, collected: false },
+  { x: 575, y: 125, size: 60, collected: false },
 ];
 const player = {
   x: 50,
   y: 300,
-  width: 50,
-  height: 50,
+  width: 100,
+  height: 100,
 
   velocityY: 0,
   velocityX: 0,
@@ -48,6 +62,12 @@ const key = {
 
 let onGround = false;
 
+const bgWidth = canvas.width;
+
+camera.x = Math.max(0, player.x - canvas.width / 2);
+
+let offset = (-camera.x * 0.5) % bgWidth;
+
 document.addEventListener("keydown", (e) => {
   if (e.key === "a") key.left = true;
   if (e.key === "d") key.right = true;
@@ -62,10 +82,17 @@ document.addEventListener("keyup", (e) => {
   if (e.key === "d") key.right = false;
 });
 
+function drawnBackground() {
+  for (let x = offset - bgWidth; x < canvas.width; x += bgWidth) {
+    ctx.drawImage(background, x, 0, bgWidth, canvas.height);
+  }
+}
+
 function drawGround() {
   for (let platform of platforms) {
     ctx.fillStyle = "#540808";
-    ctx.fillRect(
+    ctx.drawImage(
+      groundSprite,
       platform.x - camera.x,
       platform.y,
       platform.width,
@@ -78,8 +105,13 @@ function drawCoins() {
   for (coin of coins) {
     if (!coin.collected) {
       ctx.fillStyle = "gold";
-      ctx.beginPath();
-      ctx.arc(coin.x - camera.x, coin.y, coin.size / 2, 0, Math.PI * 2);
+      ctx.drawImage(
+        coinSprite,
+        coin.x - camera.x,
+        coin.y - coin.size / 2,
+        coin.size,
+        coin.size,
+      );
       ctx.fill();
     }
   }
@@ -87,12 +119,18 @@ function drawCoins() {
 
 function drawGoal() {
   ctx.fillStyle = "cyan";
-  ctx.fillRect(goal.x - camera.x, goal.y, goal.with, goal.height);
+  ctx.drawImage(goalSprite, goal.x - camera.x, goal.y, goal.with, goal.height);
 }
 
 function drawPlayer() {
   ctx.fillStyle = "green";
-  ctx.fillRect(player.x - camera.x, player.y, player.width, player.height);
+  ctx.drawImage(
+    playerSprite,
+    player.x - camera.x,
+    player.y,
+    player.width,
+    player.height,
+  );
 }
 
 function Win() {
@@ -159,6 +197,7 @@ function updatePlayer() {
 
 function gameLoop() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawnBackground();
   updatePlayer();
   drawPlayer();
   drawGoal();
@@ -169,4 +208,6 @@ function gameLoop() {
   requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+playerSprite.onload = () => {
+  gameLoop();
+};

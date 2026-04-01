@@ -13,4 +13,5 @@ body {
 canvas {
   background: #e10808a5;
   border: 3px solid white;
+  image-rendering: pixelated;
 }
