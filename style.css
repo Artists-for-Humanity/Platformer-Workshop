@@ -13,4 +13,5 @@ body {
 canvas {
     background: skyblue;
     border: 3px solid white;
+    image-rendering: pixelated;
 }

@@ -1,3 +1,15 @@
+//Assets//
+const playerSprite = new Image();
+playerSprite.src = "./game_assets/player.png";
+const groundTile = new Image();
+groundTile.src = "./game_assets/ground.png";
+const backgroundImage = new Image();
+backgroundImage.src = "./game_assets/background.png";
+const coinSprite = new Image();
+coinSprite.src = "./game_assets/coin.png";
+const goalSprite = new Image();
+goalSprite.src = "./game_assets/flag.png";
+
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
@@ -64,35 +76,38 @@ document.addEventListener("keyup", (e) => {
 
 function drawGround() {
   for (let platform of platforms) {
-    ctx.fillStyle = "green";
-    ctx.fillRect(
-      platform.x - camera.x,
-      platform.y,
-      platform.width,
-      platform.height,
-    );
+    for (let x = platform.x; x < platform.x + platform.width; x += 32) {
+      ctx.drawImage(groundTile, x - camera.x, platform.y, 32, 32);
+    }
   }
 }
 
 function drawCoins() {
   for (let coin of coins) {
     if (!coin.collected) {
-      ctx.fillStyle = "gold";
-      ctx.beginPath();
-      ctx.arc(coin.x - camera.x, coin.y, coin.size / 2, 0, Math.PI * 2);
-      ctx.fill();
+      ctx.drawImage(
+        coinSprite,
+        coin.x - camera.x - coin.size / 2,
+        coin.y - coin.size / 2,
+        coin.size,
+        coin.size,
+      );
     }
   }
 }
 
 function drawGoal() {
-  ctx.fillStyle = "red";
-  ctx.fillRect(goal.x - camera.x, goal.y, goal.width, goal.height);
+  ctx.drawImage(goalSprite, goal.x - camera.x, goal.y, goal.width, goal.height);
 }
 
 function drawPlayer() {
-  ctx.fillStyle = "blue";
-  ctx.fillRect(player.x - camera.x, player.y, player.width, player.height);
+  ctx.drawImage(
+    playerSprite,
+    player.x - camera.x,
+    player.y,
+    player.width,
+    player.height,
+  );
 }
 
 function updatePlayer() {
@@ -147,9 +162,21 @@ function showScore() {
   ctx.fillText("Coins: " + score, 20, 30);
 }
 
+function drawBackground() {
+  // get canvas width
+  const bgWidth = canvas.width;
+  // calculate offset based on camera position
+  let offset = (-camera.x * 0.2) % bgWidth;
+  // tile the background the same way
+  for (let x = offset - bgWidth; x < canvas.width; x += bgWidth) {
+    ctx.drawImage(backgroundImage, x, 0, canvas.width, canvas.height);
+  }
+}
+
 function gameLoop() {
   camera.x = player.x - canvas.width / 2;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBackground();
   updatePlayer();
   drawGround();
   drawPlayer();
@@ -173,4 +200,6 @@ function gameLoop() {
   showScore();
 }
 
-gameLoop();
+playerSprite.onload = () => {
+  gameLoop();
+};
