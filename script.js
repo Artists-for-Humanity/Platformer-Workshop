@@ -1,18 +1,12 @@
+//CONSTANTS + LET
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
-let onGround = false;
-let score = 0;
-let gameWon = false;
-
-
-canvas.width = 800;
-canvas.height = 500;
 
 const player = {
-    x: 100,
-    y: 100,
-    width: 50,
-    height: 50,
+    x: 120,
+    y: 191,
+    width: 40,
+    height: 63.7,
 
     velocityX: 0,
     velocityY: 0,
@@ -41,7 +35,9 @@ const platforms = [
 const coins = [
     { x: 250, y: 310, size: 20, collected: false },
     { x: 450, y: 260, size: 20, collected: false },
-    { x: 650, y: 210, size: 20, collected: false}
+    { x: 650, y: 210, size: 20, collected: false},
+    { x: 860, y: 250, size: 20, collected: false},
+    { x: 1050, y: 330, size: 20, collected: false},
 ];
 
 const goal = {
@@ -58,6 +54,34 @@ const keys = {
     right: false,
 };
 
+
+const playerSprite = new Image();
+playerSprite.src = "./assets/tutorial-images/player.png";
+
+const groundTile = new Image();
+groundTile.src = "./assets/tutorial-images/ground_grass_small.png";
+
+const bgImage = new Image();
+bgImage.src = "./assets/tutorial-images/bg_layer2.png";
+
+const coinSprite = new Image();
+coinSprite.src = "./assets/tutorial-images/coin_gold.png";
+
+const goalSprite = new Image();
+goalSprite.src = "./assets/tutorial-images/portal_yellowParticle.png";
+
+
+let onGround = false;
+let score = 0;
+let gameWon = false;
+
+canvas.width = 800;
+canvas.height = 500;
+
+
+
+
+//KEYS
 document.addEventListener("keydown", (e) => {
     if (e.key === "a") keys.left = true;
     if (e.key === "d") keys.right = true;
@@ -78,18 +102,30 @@ document.addEventListener("keydown", (e) => {
 });
 
 
-
+//FUNCTIONS
 function drawPlayer() {
-    ctx.fillStyle = "blue";
-    ctx.fillRect(player.x - camera.x, player.y, player.width, player.height);
+    ctx.drawImage(
+        playerSprite,
+        player.x - camera.x,
+        player.y,
+        player.width,
+        player.height
+    );
 }
 
 
 function drawGround() {
-  for (let platform of platforms) {
-    ctx.fillStyle = "green";
-    ctx.fillRect(platform.x - camera.x, platform.y, platform.width, platform.height);
+    for (let platform of platforms) {
+        for (let x = platform.x; x < platform.x + platform.width; x += 32) {
+        ctx.drawImage(
+            groundTile,
+            x - camera.x,
+            platform.y,
+            32,
+            32
+        );
   }
+}
 }
 
 
@@ -132,21 +168,6 @@ function updatePlayer() {
     player.velocityY += gravity;
     player.y += player.velocityY;
 
-// for (let platform of platforms) {
-//   const isLanding =
-//     player.y + player.height >= platform.y &&
-//     player.y + player.height <= platform.y + platform.height &&
-//     player.x + player.width > platform.x &&
-//     player.x < platform.x + platform.width &&
-//     player.velocityY >= 0;
-
-//   if (isLanding) {
-//     player.y = platform.y - player.height;
-//     player.velocityY = 0;
-//     onGround = true;
-//   }
-// }
-
 
 for (let platform of platforms) {
   const isLanding =
@@ -162,8 +183,6 @@ for (let platform of platforms) {
     onGround = true;
   }
 }
-
-
 
 
 if (
@@ -205,4 +224,7 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+//START
+playerSprite.onload = () => {
+    gameLoop();
+};
