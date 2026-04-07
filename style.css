@@ -13,4 +13,11 @@ body {
 canvas {
   background: #87ceeb;
   border: 3px solid white;
+  /* make pixel art crisp */
+  image-rendering: pixelated;
+  image-rendering: -webkit-optimize-contrast;
+  /* ensure canvas is not blurry on high-DPI */
+  width: 800px;
+  height: 500px;
+  display: block;
 }
