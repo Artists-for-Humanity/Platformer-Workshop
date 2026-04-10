@@ -190,7 +190,11 @@ function gameWin(){
     ctx.fillText("YOU WIN", 300, 200);
   }
 }
-
+function showScore() {
+  ctx.fillStyle = "black";
+  ctx.font = '20px Arial';
+  ctx.fillText("coins: "+ score, 20, 30);
+}
 
 function gameLoop() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -200,6 +204,7 @@ function gameLoop() {
     drawGround();
     drawPlayer();
     drawGoal();
+    showScore();
     camera.x = player.x - canvas.width / 2;
 
     requestAnimationFrame(gameLoop);
