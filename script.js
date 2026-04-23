@@ -210,3 +210,47 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 gameLoop();
+
+
+
+const playerSprite = new Image();
+playerSprite.src = "./assets/player.png";
+
+const groundTile = new Image();
+groundTile.src = "./assets/ground.png";
+
+const backgroundImage = new Image();
+backgroundImage.src = "./assets/background.png";
+
+const coinSprite = new Image();
+coinSprite.src = "./assets/coin.png";
+
+const goalSprite = new Image();
+goalSprite.src = "./assets/flag.png";
+
+
+ctx.drawImage(
+  playerSprite,
+  player.x - camera.x,
+  player.y,
+  player.width,
+  player.height
+);
+
+
+
+for (let platform of platforms) {
+  for (let x = platform.x; x < platform.x + platform.width; x += 32) {
+    ctx.drawImage(
+      groundTile,
+      x - camera.x,
+      platform.y,
+      32,
+      32
+    );
+  }
+}
+
+playerSprite.onload = () => {
+  gameLoop();
+};
