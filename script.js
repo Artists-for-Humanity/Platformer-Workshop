@@ -1,6 +1,11 @@
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
-const ground= { y: 450, height: 50 };
+const platforms = [
+  {x: 0, y: 450, width: 800, height: 50 },
+  {x: 200, y: 350, width: 150, height: 20 },
+  {x: 20, y: 250, width: 150, height: 20 },
+  {x: 300, y: 180, width: 150, height: 20 }
+];
 const gravity = 0.5;
 const keys = {left:false , right:false, };
 
@@ -20,32 +25,40 @@ let onGround = false;
 
 function updatePlayer() {
 
-  if (keys.left) player.velocityX = -5;
-  else if (keys.right) player.velocityX = 5;
-  else player.velocityX = 0;
+  if (keys.left) player.velocityX -= .5;
+  else if (keys.right) player.velocityX += .5;
+  else player.velocityX *= 0.9;
 
   
   player.x += player.velocityX;
   player.velocityY += gravity;
   player.y += player.velocityY;
 
-  if (player.y + player.height >= ground.y) {
-    player.y = ground.y - player.height;
-    player.velocityY = 0;
-  }
+
   
-  if (player.y + player.height >= ground.y) {
-    player.y = ground.y - player.height;
+ for (let platform of platforms) {
+  const isLanding =
+    player.y + player.height >= platform.y &&
+    player.y + player.height <= platform.y + platform.height &&
+    player.x + player.width > platform.x &&
+    player.x < platform.x + platform.width &&
+    player.velocityY >= 0;
+
+  if (isLanding) {
+    player.y = platform.y - player.height;
     player.velocityY = 0;
     onGround = true;
-  } else {
-    onGround = false;
   }
+}
+
+
 }
   
 function drawGround() {
-  ctx.fillStyle = 'green';
-  ctx.fillRect(0, ground.y, canvas.width, ground.height);
+  for (let platform of platforms) {
+    ctx.fillStyle = 'green';
+    ctx.fillRect(platform.x, platform.y, platform.width, platform.height);  
+  }
 }
 
 function drawPlayer() {
