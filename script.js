@@ -75,8 +75,8 @@ function drawPlayer() {
 function updatePlayer() {
     // horizontal movement
     if (keys.left) player.velocityX = -5;
-    if (keys.right) player.velocityX = 5;
-    else if (player.velocityX = 0) player.velocityX = 0;
+    else if (keys.right) player.velocityX = 5;
+    else player.velocityX = 0;
   
     player.x += player.velocityX;
   
