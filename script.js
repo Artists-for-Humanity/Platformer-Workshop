@@ -34,6 +34,23 @@ let gameWon = false;
 canvas.width = 800;
 canvas.height = 500;
 
+const playerSprite = new Image();
+playerSprite.src = './assets/player.png';
+
+const groundTile = new Image();
+groundTile.src = '../assets/tutorial-images/ground.png'; 
+
+
+const backgoundImage = new Image();
+backgoundImage.src = './assets/background.png';
+
+const coinSprite = new Image();
+coinSprite.src = './assets/coin.png';
+
+goalSprite = new Image();
+goalSprite.src = './assets/flag.png';
+
+
 
 
 function updatePlayer() {
@@ -143,7 +160,19 @@ function gameloop() {
   gameWin();
   showScore();
 }
-gameloop();
+
+
+
+
+
+
+
+
+
+
+playerSprite.onload = () => {  
+  gameloop();
+}
 
 
 document.addEventListener('keydown', (e) => {
