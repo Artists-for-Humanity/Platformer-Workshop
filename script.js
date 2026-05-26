@@ -11,6 +11,7 @@ groundTile.src = "./assets/ground.png";
 const backgroundImage = new Image();
 backgroundImage.src = "./assets/background.png";
 
+
 const coinSprite = new Image();
 coinSprite.src = "./assets/coin.png";
 
@@ -19,7 +20,7 @@ goalSprite.src = "./assets/flag.png";
 
 const camera = {
     x: 0
-  };
+};
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -53,17 +54,17 @@ const platforms = [
     { x: 200, y: 350, width: 150, height: 20 },
     { x: 400, y: 300, width: 150, height: 20 },
     { x: 600, y: 250, width: 150, height: 20 }
-  ];
+];
 
-  
-  const coins = [
+
+const coins = [
     { x: 250, y: 300, size: 20, collected: false },
     { x: 450, y: 250, size: 20, collected: false },
     { x: 650, y: 200, size: 20, collected: false },
-    { x: 1000, y: 450, width:300, height: 20 }
+    { x: 1000, y: 450, width: 300, height: 20 }
 
-  ];
-  
+];
+
 const keys = {
     left: false,
     right: false,
@@ -71,14 +72,14 @@ const keys = {
 
 document.addEventListener('keydown', (e) => {
     if (e.key === 'a') {
-   
+
         keys.left = true;
     }
     if (e.key === 'd') {
         keys.right = true;
     }
     if (e.key === 'w' && onGround) {
-        player.velocityY = -12; 
+        player.velocityY = -12;
     }
 });
 
@@ -102,126 +103,132 @@ function drawPlayer() {
         player.y,
         player.width,
         player.height
-      );
+    );
 
 }
 
 function drawGround() {
     for (let platform of platforms) {
-      ctx.fillStyle = "gray";
-      ctx.fillRect(platform.x - camera.x, platform.y, platform.width, platform.height);
-     }
-  }
-
-  function drawCoins() {
-    for (let coin of coins) {
-      if (!coin.collected) {
-        ctx.fillStyle = "yellow";
-        ctx.beginPath();
-        ctx.arc(coin.x - camera.x, coin.y, coin.size / 2, 0, Math.PI * 2);
-        ctx.fill();
-      }
+        ctx.fillStyle = "green";
+        ctx.fillRect(platform.x - camera.x, platform.y, platform.width, platform.height);
     }
-  }
+} 
 
-  function drawGoal() {
+function drawCoins() {
+    for (let coin of coins) {
+        if (!coin.collected) {
+            ctx.fillStyle = "gold";
+            ctx.beginPath();
+            ctx.arc(coin.x - camera.x, coin.y, coin.size / 2, 0, Math.PI * 2);
+            ctx.fill();
+        }
+    }
+}
+
+function drawGoal() {
     ctx.fillStyle = "red";
     ctx.fillRect(goal.x - camera.x, goal.y, goal.width, goal.height);
-  }
-  
-  function gameWin(){
-    if (gameWon) {
-      ctx.fillStyle = "black";
-      ctx.font = "40px Arial";
-      ctx.fillText("YOU WIN", 300, 200);
-    }
-  }
+}
 
-  function showScore() {
+function gameWin() {
+    if (gameWon) {
+        ctx.fillStyle = "black";
+        ctx.font = "40px Arial";
+        ctx.fillText("YOU WIN", 300, 200);
+    }
+}
+
+function showScore() {
     ctx.fillStyle = "black";
     ctx.font = "20px Arial";
     ctx.fillText("Coins: " + score, 20, 30);
-  }
+}
 
-  camera.x = player.x - canvas.width / 8;
+camera.x = player.x - canvas.width / 8;
+
+function drawBackground() {
+    ctx.drawImage(backgroundImage, 0, 0, canvas.width,
+        canvas.height);
+}
 
 
-  
 function gameLoop() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height); 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    updatePlayer(); 
+    updatePlayer();
+    drawBackground();
+    drawGround();
+    drawPlayer();
+    drawCoins();
+    showScore();
 
-drawGround(); 
-drawPlayer(); 
-drawCoins();
-showScore();
-
-    requestAnimationFrame(gameLoop); 
+    requestAnimationFrame(gameLoop);
 }
 
 function updatePlayer() {
     // horizontal movement based on key presses
     if (keys.left) player.velocityX -= 0.5;
     if (keys.right) player.velocityX += 0.5;
-    
+
     player.velocityX *= 0.9; // friction
 
-    player.x += player.velocityX; 
+    player.x += player.velocityX;
 
-    player.velocityY += gravity; 
-    player.y += player.velocityY; 
+    player.velocityY += gravity;
+    player.y += player.velocityY;
 
     if (
         player.x < goal.x + goal.width &&
         player.x + player.width > goal.x &&
         player.y < goal.y + goal.height &&
         player.y + player.height > goal.y
-      ) {
+    ) {
         gameWon = true;
-      }
-      
+    }
+
 
     // colision  with the ground
     let gameWon = false;
 
     for (let coin of coins) {
         if (!coin.collected) {
-          const dx = player.x + player.width / 2 - coin.x;
-          const dy = player.y + player.height / 2 - coin.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-      
-          if (distance < coin.size) {
-            coin.collected = true;
-            score++;
-          }
+            const dx = player.x + player.width / 2 - coin.x;
+            const dy = player.y + player.height / 2 - coin.y;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < coin.size) {
+                coin.collected = true;
+                score++;
+            }
         }
-      }
+    }
 
     for (let platform of platforms) {
         const isLanding =
-          player.y + player.height >= platform.y &&
-          player.y + player.height <= platform.y + platform.height &&
-          player.x + player.width > platform.x &&
-          player.x < platform.x + platform.width &&
-          player.velocityY >= 0;
-      
-        if (isLanding) {
-          player.y = platform.y - player.height;
-          player.velocityY = 0;
-          onGround = true;
-        }
-      } 
-    }
+            player.y + player.height >= platform.y &&
+            player.y + player.height <= platform.y + platform.height &&
+            player.x + player.width > platform.x &&
+            player.x < platform.x + platform.width &&
+            player.velocityY >= 0;
 
-    let score = 0;
-    
-    const goal = {
-        x: 1200,
-        y: 380,
-        width: 40,
-        height: 70
-      };
-    
-      
-gameLoop(); 
+        if (isLanding) {
+            player.y = platform.y - player.height;
+            player.velocityY = 0;
+            onGround = true;
+        }
+    }
+}
+
+let score = 0;
+
+const goal = {
+    x: 1200,
+    y: 380,
+    width: 40,
+    height: 70
+};
+
+
+playerSprite.onload = () => {
+    gameLoop();
+};
