@@ -204,7 +204,8 @@ function gameLoop() {
     drawGround();
     drawPlayer();
     drawGoal();
-    showScore();
+    showScore(); 
+    gameWin();
     camera.x = player.x - canvas.width / 2;
 
     requestAnimationFrame(gameLoop);
