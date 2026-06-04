@@ -149,8 +149,13 @@ function drawGround() {
 }
 
 function drawPlayer() {
-  ctx.fillStyle = "blue";
-  ctx.fillRect(player.x - camera.x, player.y, player.width, player.height);
+  ctx.drawImage(
+  playerSprite,
+  player.x - camera.x,
+  player.y,
+  player.width,
+  player.height
+);
 }
 
 
@@ -230,13 +235,6 @@ const goalSprite = new Image();
 goalSprite.src = "./assets/flag.png";
 
 
-ctx.drawImage(
-  playerSprite,
-  player.x - camera.x,
-  player.y,
-  player.width,
-  player.height
-);
 
 
 
