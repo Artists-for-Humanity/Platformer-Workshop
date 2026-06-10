@@ -8,9 +8,8 @@ canvas.height = 500;
 const player = {
     x: 100,
     y: 100,
-    width: 50,
-    height: 50,
-
+    width: 75,
+    height: 75,
     velocityX: 0,
     velocityY: 0,
 };
@@ -37,6 +36,24 @@ const goal = {
 const camera = {
   x: 0
 };
+const playerSprite = new Image();
+playerSprite.src = "./assets/playerGreen_roll.png";
+
+const groundTile = new Image();
+groundTile.src = "./assets/tileGreen_27.png";
+
+const backgroundImage = new Image();
+backgroundImage.src = "./assets/backgroundColorGrass.png";
+
+const coinSprite = new Image();
+coinSprite.src = "./assets/coin.png";
+
+const goalSprite = new Image();
+goalSprite.src = "./assets/flag.png";
+
+
+
+
 
 let score = 0;
 let gameWon = false;
@@ -141,10 +158,17 @@ for (let coin of coins) {
 }
 
 function drawGround() {
-  for (let platform of platforms) {
-    ctx.fillStyle = "green";
-    ctx.fillRect(platform.x - camera.x, platform.y, platform.width, platform.height);
+ for (let platform of platforms) {
+  for (let x = platform.x; x < platform.x + platform.width; x += 32) {
+    ctx.drawImage(
+      groundTile,
+      x - camera.x,
+      platform.y,
+      32,
+      32
+    );
   }
+}
 
 }
 
@@ -216,26 +240,6 @@ function gameLoop() {
     requestAnimationFrame(gameLoop);
 }
 gameLoop();
-
-
-
-const playerSprite = new Image();
-playerSprite.src = "./assets/player.png";
-
-const groundTile = new Image();
-groundTile.src = "./assets/ground.png";
-
-const backgroundImage = new Image();
-backgroundImage.src = "./assets/background.png";
-
-const coinSprite = new Image();
-coinSprite.src = "./assets/coin.png";
-
-const goalSprite = new Image();
-goalSprite.src = "./assets/flag.png";
-
-
-
 
 
 for (let platform of platforms) {
