@@ -12,7 +12,9 @@ font-family: poppins, sans-serif;
 
 
 canvas {
+    image-rendering: pixelated;
     background: #87ceeb;
     border: 3px solid white;
+    
 }
 
